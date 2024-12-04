@@ -1,7 +1,7 @@
 import re
 
 file = open("./day3/input.txt", "r")
-input = file.read()
+originalInput = file.read()
 file.close()
 
 def computeMul(mulString):
@@ -44,6 +44,8 @@ def computeMul(mulString):
 
 total = 0
 
+input = originalInput
+
 index = re.search("mul\(", input)
 
 while(index != None):
@@ -52,4 +54,39 @@ while(index != None):
     input = input[index.start()+4:]
     index = re.search("mul\(", input)
 
-print(total)
+
+
+input = originalInput
+
+indexDont = re.search("don't\(\)", input)
+
+while(indexDont != None):
+    indexDo = re.search("do\(\)", input)
+    if (indexDo != None):
+        while(indexDo.start() < indexDont.start()):
+            input = input[:indexDo.start()] + input[indexDo.end():]
+            indexDont = re.search("don't\(\)", input)
+            indexDo = re.search("do\(\)", input)
+            if (indexDo == None):
+                break
+        if (indexDo != None):
+            input = input[:indexDont.start()] + input[indexDo.end():]
+        else:
+            input = input[:indexDont.start()]
+    else:
+        input = input[:indexDont.start()]
+    indexDont = re.search("don't\(\)", input)
+
+
+total2 = 0
+
+index = re.search("mul\(", input)
+
+while(index != None):
+    mulString = input[index.start():index.start()+12]
+    total2 += computeMul(mulString)
+    input = input[index.start()+4:]
+    index = re.search("mul\(", input)
+
+print("Part 1: ", total)
+print("Part 2: ", total2)
