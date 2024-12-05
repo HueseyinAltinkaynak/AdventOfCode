@@ -1,14 +1,14 @@
 import sys
 import re
 
-content = ""
+# file = open("./day4/input.txt", "r")
+# content = file.read()
+# file.close()
 
-for line in sys.stdin:
-  content += line
+content = sys.stdin.read()
 
 lines = content.split("\n")
 lines.pop()
-
 directions = [(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
 
 maxLine = len(lines)

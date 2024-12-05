@@ -5,6 +5,8 @@ import sys
 # originalInput = file.read()
 # file.close()
 
+originalInput = sys.stdin.read()
+
 def computeMul(mulString):
     valid = True
     curnum = 1
@@ -44,52 +46,50 @@ def computeMul(mulString):
         return 0
 
 total = 0
-total2 = 0
 
-for line in sys.stdin:
-    input = line
+input = originalInput
 
+index = re.search("mul\(", input)
+
+while(index != None):
+    mulString = input[index.start():index.start()+12]
+    total += computeMul(mulString)
+    input = input[index.start()+4:]
     index = re.search("mul\(", input)
 
-    while(index != None):
-        mulString = input[index.start():index.start()+12]
-        total += computeMul(mulString)
-        input = input[index.start()+4:]
-        index = re.search("mul\(", input)
 
 
+input = originalInput
 
-    input = line
+indexDont = re.search("don't\(\)", input)
 
-    indexDont = re.search("don't\(\)", input)
-
-    while(indexDont != None):
-        indexDo = re.search("do\(\)", input)
+while(indexDont != None):
+    indexDo = re.search("do\(\)", input)
+    if (indexDo != None):
+        while(indexDo.start() < indexDont.start()):
+            input = input[:indexDo.start()] + input[indexDo.end():]
+            indexDont = re.search("don't\(\)", input)
+            indexDo = re.search("do\(\)", input)
+            if (indexDo == None):
+                break
         if (indexDo != None):
-            while(indexDo.start() < indexDont.start()):
-                input = input[:indexDo.start()] + input[indexDo.end():]
-                indexDont = re.search("don't\(\)", input)
-                indexDo = re.search("do\(\)", input)
-                if (indexDo == None):
-                    break
-            if (indexDo != None):
-                input = input[:indexDont.start()] + input[indexDo.end():]
-            else:
-                input = input[:indexDont.start()]
+            input = input[:indexDont.start()] + input[indexDo.end():]
         else:
             input = input[:indexDont.start()]
-        indexDont = re.search("don't\(\)", input)
+    else:
+        input = input[:indexDont.start()]
+    indexDont = re.search("don't\(\)", input)
 
 
-    
+total2 = 0
 
+index = re.search("mul\(", input)
+
+while(index != None):
+    mulString = input[index.start():index.start()+12]
+    total2 += computeMul(mulString)
+    input = input[index.start()+4:]
     index = re.search("mul\(", input)
-
-    while(index != None):
-        mulString = input[index.start():index.start()+12]
-        total2 += computeMul(mulString)
-        input = input[index.start()+4:]
-        index = re.search("mul\(", input)
 
 print("Part 1: ", total)
 print("Part 2: ", total2)
