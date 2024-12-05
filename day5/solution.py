@@ -26,7 +26,8 @@ for line in ordLines:
         for next in numDict[pair[1]][1]:
             numDict[next][0] += 1
 
-#print(numDict)
+# for line in numDict:
+#     print(line, ": ",numDict[line])
 
 total = 0
   
@@ -38,8 +39,7 @@ for line in updateLines:
             valid = False
             break
     if(valid):
-        total += int(steps[int(len(steps)/2)])
-
-#print(int(5/2))
+        total += 1
+        #total += int(steps[int(len(steps)/2)])
 
 print(total)
