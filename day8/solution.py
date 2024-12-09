@@ -41,12 +41,21 @@ for freq in antennas:
         for secondIndex in range(firstIndex + 1, len(antennas[freq])):
             vector = (antennas[freq][secondIndex][0] - antennas[freq][firstIndex][0], antennas[freq][secondIndex][1] - antennas[freq][firstIndex][1])
             base = (antennas[freq][firstIndex][0], antennas[freq][firstIndex][1])
-            while(-1 < node[0] and node[0] < yMax and -1 < node[1] and node[1] < xMax and node not in nodes):
-                if(node not in nodes)
-                nodes.append(node)
-
-            node = (antennas[freq][secondIndex][0] * 2 - antennas[freq][firstIndex][0], antennas[freq][secondIndex][1] * 2 - antennas[freq][firstIndex][1])
-            if(-1 < node[0] and node[0] < yMax and -1 < node[1] and node[1] < xMax and node not in nodes):
-                nodes.append(node)
+            if(base not in nodes):
+                nodes.append(base)
+            index = 1
+            node = (base[0] + index * vector[0], base[1] + index * vector[1])
+            while(-1 < node[0] and node[0] < yMax and -1 < node[1] and node[1] < xMax):
+                if(node not in nodes):
+                    nodes.append(node)
+                index += 1
+                node = (base[0] + index * vector[0], base[1] + index * vector[1])
+            index = -1
+            node = (base[0] + index * vector[0], base[1] + index * vector[1])
+            while(-1 < node[0] and node[0] < yMax and -1 < node[1] and node[1] < xMax):
+                if(node not in nodes):
+                    nodes.append(node)
+                index -= 1
+                node = (base[0] + index * vector[0], base[1] + index * vector[1])
 
 print("Part 2: ", len(nodes))                

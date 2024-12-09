@@ -1,7 +1,7 @@
 import sys
 import re
 
-file = open("./day7/testinput.txt", "r")
+file = open("./day7/input.txt", "r")
 content = file.read()
 file.close()
 
@@ -17,82 +17,72 @@ def check(line):
     steps = s[1].split(" ")
     start = int(steps[0])
     steps.pop(0)
-    valid = False
 
-    print("Goal: ", goal)
+    comb = ["0", "1"]
 
-    indexMax = pow(2, len(steps))
-    level = 0
-    levelMode = {}
+    for i in range(len(steps)-1):
+        test = []
+        for c in comb:
+            test.append(c+"0")
+            test.append(c+"1")
+        comb = test
 
-    index = 0
-
-    while(index < indexMax):
-        if (levelMode.get(level) == None):
-            levelMode[level] = "+"
-            total += steps[level]
-        elif (levelMode.get(level) == "+"):
-            levelMode[level] = "+"
-            total += steps[level]
-        else:
-            levelMode[level] = "+"
-            total += steps[level]
-
-        if (level == 4):
-            index += 1
-            if (goal == total):
-                valid = True
-                break
+    for c in comb:
+        total = start
+        for i in range(len(c)):
+            if(c[i] == "0"):
+                total += int(steps[i])
             else:
-                level -= 1
-        else:
-            level += 1
-
-
-
+                total *= int(steps[i])
+        if(total == goal):
+            return goal
         
+    return 0
 
+def check2(line):
+    s = line.split(": ")
+    goal = int(s[0])
+    steps = s[1].split(" ")
+    start = int(steps[0])
+    steps.pop(0)
 
-    # for i in range(levels + 1):
-    #     total = start
-    #     print("------------------")
-    #     print("Level: ", i)
-    #     print("Start: ", total)
-    #     for j in range(len(steps)):
+    comb = ["0", "1", "2"]
 
-    #         val = int(steps[j])
-    #         if ((i - pow(2, len(steps) - j) ) % 2 == 1):         ((i - (i % 2)) / 2) % 2
-    #             total *= val
-    #         else:
-    #             total += val
-    #         print("Step: ", j, " new Total", total)
+    for i in range(len(steps)-1):
+        test = []
+        for c in comb:
+            test.append(c+"0")
+            test.append(c+"1")
+            test.append(c+"2")
+        comb = test
 
-    #     if (total == goal):
-    #         valid = True
-    #         break
+    for c in comb:
+        total = start
+        for i in range(len(c)):
+            if(c[i] == "0"):
+                total += int(steps[i])
+            elif(c[i] == "1"):
+                total *= int(steps[i])
+            else:
+                total = int(str(total) + steps[i])
+        if(total == goal):
+            return goal
         
-        
-    if (valid):
-        return goal
-    else:
-        return 0
+    return 0
 
 
 
 lines = content.split("\n")
 
-line = lines[1]
+total1 = 0
 
+for line in lines:
+    total1 += check(line)
 
+total2 = 0
 
-# print("Line: ", line)
-# print("Check: ", check(line))
+for line in lines:
+    total2 += check2(line)
 
-# total1 = 0
-
-# for line in lines:
-#     total1 += check(line)
-
-# print("Part 1: ", total1)
-
-#check(line)
+print("Part 1: ", total1)
+print("Part 2: ", total2)
