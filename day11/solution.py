@@ -1,7 +1,7 @@
 import sys
 import re
 
-file = open("./day11/testinput.txt", "r")
+file = open("./day11/input.txt", "r")
 content = file.read()
 file.close()
 
@@ -40,14 +40,28 @@ def getNextStones(stone):
 
 print(stones)
 
-for i in range(40):
-    temp = []
-    for stone in stones:
-        temp.extend(getNextStones(stone))
-    stones = temp
+# for i in range(75):
+#     temp = []
+#     for stone in stones:
+#         temp.extend(getNextStones(stone))
+#     stones = temp
 
-    if((i+1) % 5 == 0):
-        print("Index ", i+1, ": ", len(stones))
+#     if((i+1) % 5 == 0):
+#         print("Index ", i+1, ": ", len(stones))
+
+total2 = 0
+
+for stone in stones:
+    temp = [stone]
+    temp2 = []
+    for i in range(75):
+        for t in temp:
+            temp2.extend(getNextStones(t))
+        temp = temp2.copy()
+        temp2 = []
+    total2 += len(temp2)
+    print("Value after: ", stone, ": ", total2)
+
 
 #print("Part 2: ",len(stones))
 
