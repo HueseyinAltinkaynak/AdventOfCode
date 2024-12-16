@@ -1,7 +1,7 @@
 import sys
 import re
 
-file = open("./day15/testinput2.txt", "r")
+file = open("./day15/input.txt", "r")
 content = file.read()
 file.close()
 
@@ -73,7 +73,7 @@ def moveRobot(pos, dir):
     nextPos = (pos[0] + dir[0], pos[1] + dir[1])
     nextBox = checkBox(nextPos)
 
-    if(nextPos in wallList):
+    if(nextPos in wallList2):
         return False
     elif(nextBox != None):
         if(movable(nextBox, dir)):
@@ -133,8 +133,7 @@ def checkBox(pos):
     else:
         return None  
     
-def updateMap():
-    global map
+def updateMap(map):
     for yInd in range(len(map)):
         for xInd in range(len(map[0])):
             mapPos = (yInd, xInd)
@@ -146,24 +145,25 @@ def updateMap():
                 map[yInd] = map[yInd][:xInd] + "@" + map[yInd][xInd+1:]
             else:
                 map[yInd] = map[yInd][:xInd] + "." + map[yInd][xInd+1:]
+    return map  
     
-def printMap():
+def printMap(map):
     for line in map:
         print(line)
 
 
 # move robot
-# for char in moves:
-#     dir = getDir(char)
-#     move(robot, dir, True)
+for char in moves:
+    dir = getDir(char)
+    move(robot, dir, True)
 
 
-# total1 = 0
+total1 = 0
 
-# for box in boxList:
-#     total1 += 100 * box[0] + box[1]
+for box in boxList:
+    total1 += 100 * box[0] + box[1]
 
-# print("Part 1: ", total1)
+print("Part 1: ", total1)
 
 
 
@@ -180,4 +180,3 @@ for wideBox in boxList2:
     total2 += 100 * box[0] + box[1]
 
 print("Part 2: ", total2)
-
