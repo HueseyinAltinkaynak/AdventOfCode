@@ -8,68 +8,97 @@ file_path = os.path.join(base_dir, 'input.txt')
 file = open(file_path, "r")
 content = file.read()
 file.close()
-map_grid = content.split("\n")
+content_split = content.split("\n\n")
+range_list = content_split[0].split("\n")
+id_list = content_split[1].split("\n")
 
-max_y_index = len(map_grid)-1 
-max_x_index = len(map_grid[0])-1 
+for ind in range(len(range_list)):
+    range_split = range_list[ind].split("-")
+    range_list[ind] = (int(range_split[0]),int(range_split[1]))
 
-def check_valid_roll(x,y):
-    surrounded_rolls = 0    
-    for y_range in range(-1, 2):
-        for x_range in range(-1, 2):
-            if y+y_range < 0 or y+y_range > max_y_index:
-                continue
-            elif x+x_range < 0 or x+x_range > max_x_index:
-                continue
-            elif x_range == 0 and y_range == 0:
-                continue
-            else:
-                if(map_grid[y+y_range][x+x_range] == '@' or map_grid[y+y_range][x+x_range] == 'x'):
-                    surrounded_rolls += 1
+def fresh_id(id_val):
+    for r in range_list:
+        if id_val >= r[0] and id_val <= r[1]:
+            return True
+    return False
 
-    return surrounded_rolls
+last_range = range_list.pop()
 
-def remove_rolls():
-    removed_rolls = 0
-    for y_pos in range(max_y_index+1):
-        for x_pos in range(max_x_index+1):
-            if(map_grid[y_pos][x_pos] == '@'):
-                if(check_valid_roll(x_pos, y_pos) < 4):
-                    # map_grid[y_pos][x_pos] = "."
-                    map_grid[y_pos] = map_grid[y_pos][:x_pos]+"x"+map_grid[y_pos][x_pos+1:]
-                    removed_rolls +=1
+range_list_clean = [(last_range[0],'S'),(last_range[1],'E')]
 
-    for line_index in range(max_y_index+1):
-        map_grid[line_index] = map_grid[line_index].replace("x", ".")
+for r in range_list:
+    temp_list = []
+    for i in range(len(range_list_clean)):
+        if range_list_clean[i][0] > r[0]:
+            temp_list.extend(range_list_clean[:i])
+            temp_list.append((r[0],'S'))
+            temp_list.extend(range_list_clean[i:])
+            break
+        elif i == len(range_list_clean)-1:
+            temp_list.extend(range_list_clean)
+            temp_list.append((r[0],'S'))
+    range_list_clean = temp_list
+    temp_list = []
+    for j in range(len(range_list_clean)):
+        if range_list_clean[j][0] > r[1]:
+            temp_list.extend(range_list_clean[:j])
+            temp_list.append((r[1],'E'))
+            temp_list.extend(range_list_clean[j:])
+            break
+        elif j == len(range_list_clean)-1:
+            temp_list.extend(range_list_clean)
+            temp_list.append((r[1],'E'))
+    range_list_clean = temp_list
 
-    return removed_rolls
+# range_list_clean.extend(range_list)
 
-index = 1
-removable_rolls = 0
+counter = 0
 
-total_removed_rolls = 0
+while (counter < len(range_list_clean)):
+    if(range_list_clean[counter][1] == 'S' and range_list_clean[counter+1][1] == 'S' and range_list_clean[counter+2][1] == 'E'):
+        range_list_clean.pop(counter+2)
+        range_list_clean.pop(counter+1)
+        counter = 0
+        # print(range_list_clean)
+    else:
+        # print(counter)
+        counter += 1
 
-last_removed_rolls = -1
+counter2 = 0
 
-while (last_removed_rolls != 0):
-    last_removed_rolls = remove_rolls()
-    total_removed_rolls += last_removed_rolls
+while counter2 < len(range_list_clean)-1:
+    if counter2 % 2 == 1 and range_list_clean[counter2][0] == range_list_clean[counter2+1][0]:
+        range_list_clean.pop(counter2+1)
+        range_list_clean.pop(counter2)
+    else:
+        counter2 += 1
 
-    if index == 1:
-        removable_rolls = last_removed_rolls
-        index = 2
+totalB = 0
 
-print(removable_rolls)
-print(total_removed_rolls)
+range_list2 = []
 
-# print("12343"[6:])
+for ranges in range_list_clean:
+    if ranges[1] == 'S':
+        totalB -= ranges[0]
+        range_list2.append([ranges[0]])
+    else:
+        totalB += ranges[0]+1
+        range_list2[len(range_list2)-1].append(ranges[0])
 
-# for line in map_grid:
-#     print(line)
 
-# print("----------------")
 
-# map_grid[0] = map_grid[0][:3-1]+"."+map_grid[0][3:]
+def fresh_id2(id_val):
+    for r in range_list2:
+        if id_val >= r[0] and id_val <= r[1]:
+            return True
+    return False
 
-# for line in map_grid:
-#     print(line)
+totalA = 0
+
+for id in id_list:
+    id_val = int(id)
+    if fresh_id2(id_val):
+        totalA +=1
+
+print(totalA)
+print(totalB)
