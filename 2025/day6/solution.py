@@ -42,4 +42,4 @@ for calcul in range(len(math_lines[0])):
     totalA += calc(calcul)
 
 
-print(totalA)
+print(totalA) 
